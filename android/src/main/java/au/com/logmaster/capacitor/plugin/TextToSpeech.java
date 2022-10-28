@@ -16,8 +16,10 @@ import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 
 public class TextToSpeech implements android.speech.tts.TextToSpeech.OnInitListener {
@@ -51,7 +53,7 @@ public class TextToSpeech implements android.speech.tts.TextToSpeech.OnInitListe
             float rate,
             float pitch,
             float volume,
-            int voice,
+            String voice,
             String callbackId,
             SpeakResultCallback resultCallback) {
         tts.stop();
@@ -72,12 +74,9 @@ public class TextToSpeech implements android.speech.tts.TextToSpeech.OnInitListe
                     }
                 });
 
-        Locale locale = Locale.forLanguageTag(lang);
-        Set<Voice> supportedVoices = tts.getVoices();
-        List<Voice> voiceList = new ArrayList<>(supportedVoices);
-        Voice selectedVoice = voiceList.get(voice);
+        Voice selectedVoice = this.getVoice(voice);
         tts.setVoice(selectedVoice);
-        locale = selectedVoice.getLocale();
+        Locale locale = selectedVoice.getLocale();
 
         if (Build.VERSION.SDK_INT >= 21) {
             Bundle ttsParams = new Bundle();
@@ -182,5 +181,20 @@ public class TextToSpeech implements android.speech.tts.TextToSpeech.OnInitListe
         double scale = (targetMax - targetMin) / (maxVol - minVol);
         double output = scale * (volume - minVol);
         return (int) Math.round(output);
+    }
+
+    private Voice getVoice(String voiceURI){
+        Voice voice = tts.getDefaultVoice();
+
+        if(!Objects.equals(voiceURI, "")){
+            Set<Voice> supportedVoices = tts.getVoices();
+            for (Voice v : supportedVoices) {
+                if (Objects.equals(v.getName(), voiceURI)) {
+                    voice = v;
+                    break;
+                }
+            }
+        }
+        return voice;
     }
 }

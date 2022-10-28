@@ -35,7 +35,7 @@ public class TextToSpeechPlugin extends Plugin {
         float rate = call.getFloat("rate", 1.0f);
         float pitch = call.getFloat("pitch", 1.0f);
         float volume = call.getFloat("volume", 1.0f);
-        int voice = call.getInt("voice", 0);
+        String voice = call.getString("voice", "");
 
         boolean isLanguageSupported = implementation.isLanguageSupported(lang);
         if (!isLanguageSupported) {

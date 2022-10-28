@@ -19,7 +19,7 @@ import Capacitor
         self.resolveCurrentCall()
     }
 
-    @objc public func speak(_ text: String, _ lang: String, _ rate: Float, _ pitch: Float, _ category: String, _ volume: Float, _ voice: Int, _ call: CAPPluginCall) throws {
+    @objc public func speak(_ text: String, _ lang: String, _ rate: Float, _ pitch: Float, _ category: String, _ volume: Float, _ voice: String, _ call: CAPPluginCall) throws {
         self.synthesizer.stopSpeaking(at: .immediate)
 
         var avAudioSessionCategory = AVAudioSession.Category.ambient
@@ -33,7 +33,11 @@ import Capacitor
         self.calls.append(call)
 
         let utterance = AVSpeechUtterance(string: text)
-        utterance.voice = AVSpeechSynthesisVoice(language: lang)
+        if voice != "" {
+            utterance.voice = AVSpeechSynthesisVoice(identifier: voice)
+        } else {
+            utterance.voice = AVSpeechSynthesisVoice(language: lang)
+        }
         utterance.rate = adjustRate(rate)
         utterance.pitchMultiplier = pitch
         utterance.volume = volume

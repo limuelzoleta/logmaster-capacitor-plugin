@@ -9,7 +9,6 @@ const TextToSpeech = registerPlugin<TextToSpeechPlugin>('TextToSpeech', {
 // Warm up
 if ('speechSynthesis' in window) {
   window.speechSynthesis;
-  console.log('using window.speechSynthesis')
 }
 
 export * from './definitions';

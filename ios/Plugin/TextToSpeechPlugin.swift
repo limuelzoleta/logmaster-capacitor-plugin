@@ -18,7 +18,7 @@ public class TextToSpeechPlugin: CAPPlugin {
         let pitch = call.getFloat("pitch") ?? 1.0
         let volume = call.getFloat("volume") ?? 1.0
         let category = call.getString("category") ?? "ambient"
-        let voice = call.getInt("voice") ?? 0
+        let voice = call.getString("voice") ?? ""
 
         let isLanguageSupported = implementation.isLanguageSupported(lang)
         guard isLanguageSupported else {

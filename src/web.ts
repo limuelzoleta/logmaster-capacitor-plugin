@@ -77,11 +77,10 @@ export class TextToSpeechWeb extends WebPlugin implements TextToSpeechPlugin {
   private createSpeechSynthesisUtterance(
     options: TTSOptions,
   ): SpeechSynthesisUtterance {
-    const voices = this.getSpeechSynthesisVoices();
     const utterance = new SpeechSynthesisUtterance();
     const { text, lang, rate, pitch, volume, voice } = options;
     if (voice) {
-      utterance.voice = voices[voice];
+      utterance.voice = this.getVoice(voice);
     }
     if (volume) {
       utterance.volume = volume >= 0 && volume <= 1 ? volume : 1;
@@ -118,5 +117,10 @@ export class TextToSpeechWeb extends WebPlugin implements TextToSpeechPlugin {
 
   private throwUnimplementedError(): never {
     throw this.unimplemented('Not implemented on web.');
+  }
+
+  private getVoice(voiceURI: string): SpeechSynthesisVoice {
+    const voices = this.getSpeechSynthesisVoices();
+    return voices.filter(x => x.voiceURI == voiceURI)[0];
   }
 }
