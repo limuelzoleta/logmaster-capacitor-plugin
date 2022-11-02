@@ -1,4 +1,4 @@
-import Foundation
+import AVFoundation
 import Capacitor
 
 /**
@@ -8,7 +8,7 @@ import Capacitor
 @objc(TextToSpeechPlugin)
 public class TextToSpeechPlugin: CAPPlugin {
     private static let errorUnsupportedLanguage = "This language is not supported."
-
+    
     private let implementation = TextToSpeech()
 
     @objc public func speak(_ call: CAPPluginCall) {

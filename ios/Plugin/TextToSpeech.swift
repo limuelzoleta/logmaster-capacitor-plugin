@@ -3,12 +3,13 @@ import Capacitor
 
 @objc public class TextToSpeech: NSObject, AVSpeechSynthesizerDelegate {
     let synthesizer = AVSpeechSynthesizer()
+
     let audioSession = AVAudioSession.sharedInstance()
     var calls: [CAPPluginCall] = []
 
     override init() {
         super.init()
-        self.synthesizer.delegate = self
+        synthesizer.delegate = self
     }
 
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
@@ -22,22 +23,14 @@ import Capacitor
     @objc public func speak(_ text: String, _ lang: String, _ rate: Float, _ pitch: Float, _ category: String, _ volume: Float, _ voice: String, _ call: CAPPluginCall) throws {
         self.synthesizer.stopSpeaking(at: .immediate)
 
-        var avAudioSessionCategory = AVAudioSession.Category.ambient
-        if category != "ambient" {
-            avAudioSessionCategory = AVAudioSession.Category.playback
-        }
-
-        try AVAudioSession.sharedInstance().setCategory(avAudioSessionCategory, mode: .default, options: AVAudioSession.CategoryOptions.duckOthers)
-        try AVAudioSession.sharedInstance().setActive(true)
-
         self.calls.append(call)
-
         let utterance = AVSpeechUtterance(string: text)
         if voice != "" {
             utterance.voice = AVSpeechSynthesisVoice(identifier: voice)
         } else {
-            utterance.voice = AVSpeechSynthesisVoice(language: lang)
+            utterance.voice = AVSpeechSynthesisVoice(identifier: AVSpeechSynthesisVoiceIdentifierAlex)
         }
+        
         utterance.rate = adjustRate(rate)
         utterance.pitchMultiplier = pitch
         utterance.volume = volume
@@ -45,7 +38,7 @@ import Capacitor
     }
 
     @objc public func stop() {
-        synthesizer.stopSpeaking(at: .immediate)
+        self.synthesizer.stopSpeaking(at: .immediate)
     }
 
     @objc public func getSupportedLanguages() -> [String] {
@@ -57,7 +50,7 @@ import Capacitor
     @objc public func getSupportedVoices() -> [[String: Any]]{
         let allVoices = AVSpeechSynthesisVoice.speechVoices()
         var res: [[String: Any]] = []
-
+        
         for voice in allVoices {
             let lang = [
                 "default": false,
