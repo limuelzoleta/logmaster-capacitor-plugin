@@ -8,7 +8,7 @@ import Capacitor
 @objc(TextToSpeechPlugin)
 public class TextToSpeechPlugin: CAPPlugin {
     private static let errorUnsupportedLanguage = "This language is not supported."
-    
+
     private let implementation = TextToSpeech()
 
     @objc public func speak(_ call: CAPPluginCall) {
@@ -17,8 +17,9 @@ public class TextToSpeechPlugin: CAPPlugin {
         let rate = call.getFloat("rate") ?? 1.0
         let pitch = call.getFloat("pitch") ?? 1.0
         let volume = call.getFloat("volume") ?? 1.0
-        let category = call.getString("category") ?? "ambient"
+        let category = call.getString("category") ?? "playback"
         let voice = call.getString("voice") ?? ""
+        let playOnSilent = call.getBool("playOnSilent") ?? true
 
         let isLanguageSupported = implementation.isLanguageSupported(lang)
         guard isLanguageSupported else {

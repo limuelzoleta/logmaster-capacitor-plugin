@@ -22,6 +22,14 @@ import Capacitor
 
     @objc public func speak(_ text: String, _ lang: String, _ rate: Float, _ pitch: Float, _ category: String, _ volume: Float, _ voice: String, _ call: CAPPluginCall) throws {
         self.synthesizer.stopSpeaking(at: .immediate)
+        
+        var avAudioSessionCategory = AVAudioSession.Category.ambient
+        if category != "ambient" {
+            avAudioSessionCategory = AVAudioSession.Category.playback
+        }
+
+        try AVAudioSession.sharedInstance().setCategory(avAudioSessionCategory, mode: .default, options: AVAudioSession.CategoryOptions.duckOthers)
+        try AVAudioSession.sharedInstance().setActive(true)
 
         self.calls.append(call)
         let utterance = AVSpeechUtterance(string: text)

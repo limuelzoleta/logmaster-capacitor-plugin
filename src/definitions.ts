@@ -80,6 +80,8 @@ export interface TTSOptions {
    * Default: `ambient`.
    */
   category?: string; // iOS only
+
+
 }
 
 /**
